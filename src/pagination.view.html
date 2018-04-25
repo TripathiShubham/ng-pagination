@@ -1,0 +1,29 @@
+<style>
+.pagination {
+	padding: 0px 11px 0px 11px;
+    background: #337ab7;
+    border-radius: 5px;
+    color: white;
+}
+
+.sel {
+	background: #120227 !important;
+}
+
+</style>
+
+<div class="pag" style="cursor:pointer">
+	<span class="pagination" data-ng-click="vm.gotofirst()"><<</span>
+	<span ng-repeat="page in vm.stepInfo" style="margin:5px"
+		ng-if="vm.totalPages.length-1 >= (vm.index + page)">
+		<span class="pagination" ng-if="vm.index != 0 && $first"
+			ng-click="vm.prev(vm.index + page)"><</span>
+		<span class="pagination" ng-click="vm.goto(vm.index + page)"
+			ng-class="{'sel': (vm.totalPages[vm.index + page] == (vm.sel+1))}">
+			{{vm.totalPages[vm.index + page]}}
+		</span>
+		<span class="pagination" ng-if="vm.index + vm.stShowPages < vm.stTotal  && $last"
+			ng-click="vm.next(vm.index + page)">></span>
+	</span>
+	<span class="pagination" data-ng-click="vm.gotolast()">>></span>
+</div>

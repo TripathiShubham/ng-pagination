@@ -1,0 +1,86 @@
+angular.module('tccui')
+//=========================================================================
+// Action Menu Directive
+//=========================================================================
+.directive('stPagination', [
+	function() {
+		
+		return {
+			templateUrl: 'app/shared/directives/paginationDirective/pagination.view.html',
+			restrict: 'E',
+			scope: {
+				stTotal: "=",
+				stShowPages: "=",
+				stPerPage: "=",
+				stCurrentPage: "=",
+				stCallback: "&"
+			},
+			controller: paginationController,
+			controllerAs: 'vm'
+		}
+		
+		paginationController.$inject = ['$scope'];
+		function paginationController($scope) {
+			var vm = this;
+			
+			vm.index = 0;
+			vm.sel = 0;
+			
+			vm.stShowPages = $scope.stShowPages;
+			vm.stTotal = $scope.stTotal;
+			vm.stPerPage = $scope.stPerPage;
+			
+			vm.gotofirst = function() {
+				vm.index = 0;
+				vm.sel = 0;
+				$scope.stCurrentPage = vm.sel + 1;
+			}
+			
+			vm.gotolast = function() {
+				vm.index = parseInt(vm.stTotal/vm.stShowPages) * vm.stShowPages;
+				vm.sel = vm.index;
+				$scope.stCurrentPage = vm.sel + 1;
+			}
+			
+	        vm.goto = function (index) {
+	            $scope.stCurrentPage = vm.totalPages[index];
+	            vm.sel = index;
+	        };
+	        
+	        $scope.$watch('stCurrentPage', function(value) {
+	        	$scope.stCallback();
+	        })
+
+			vm.prev = function(index) {
+				vm.index = vm.index - vm.stShowPages;
+				vm.sel = vm.index;
+				$scope.stCurrentPage = vm.sel + 1;
+			}
+			
+			vm.next = function(index) {
+				vm.index += vm.stShowPages;
+				vm.sel = index + 1;
+				$scope.stCurrentPage = vm.sel + 1;
+			}
+			
+			vm.init = function() {
+				vm.stepInfo = (function() {
+					var result = [];
+					for(var i=0; i<vm.stShowPages; i++) {
+						result.push(i);
+					}
+					return result;
+				})();
+				vm.totalPages = (function() {
+					var result = [];
+					for(var i=1; i<=vm.stTotal; i++) {
+						result.push(i);
+					}
+					return result;					
+				})()
+			};
+			
+			vm.init();
+		}
+	}
+]);
